@@ -1,0 +1,21 @@
+name: Deploy to Hugging Face Spaces
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Deploy to Hugging Face
+        env:
+          HF_TOKEN: ${{ secrets.HF_API_TOKEN }}
+        run: |
+          git config --global user.email "deploy@shadow.ai"
+          git config --global user.name "Shadow Deploy"
+          git remote add hf https://shadowboos:$HF_TOKEN@huggingface.co/spaces/shadowboos/shadow-ai-hub
+          git push hf main --force
