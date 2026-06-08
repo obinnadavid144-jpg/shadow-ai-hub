@@ -1,0 +1,29 @@
+name: Deploy to Hugging Face Space
+
+on:
+  push:
+    branches: ["main"]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Push to Hugging Face Space
+        env:
+          HF_API_TOKEN: ${{ secrets.HF_API_TOKEN }}
+        run: |
+          git clone https://huggingface.co/spaces/obinnadavid144-jpg/shadow-ai-hub
+          cd shadow-ai-hub
+
+          cp -r ../* .
+
+          git config --global user.email "github-actions@github.com"
+          git config --global user.name "github-actions"
+
+          git add .
+          git commit -m "auto deploy from GitHub"
+          git push https://obinnadavid144-jpg:$HF_API_TOKEN@huggingface.co/spaces/obinnadavid144-jpg/shadow-ai-hub main
